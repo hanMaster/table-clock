@@ -32,8 +32,8 @@ impl Application for App {
         let config = confy::load(APP_NAME, None).unwrap_or_default();
         println!("{:#?}", config);
         let path =
-            confy::get_configuration_file_path("table-clock", None).expect("TODO: panic message");
-        println!("{:#?}", path);
+            confy::get_configuration_file_path(APP_NAME, None).expect("Failed to get config path");
+        println!("Config path: {:#?}", path);
         let date_time = Local::now();
         (
             Self {
