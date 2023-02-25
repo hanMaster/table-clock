@@ -10,7 +10,8 @@ impl application::StyleSheet for Theme {
     fn appearance(&self, _style: &Self::Style) -> application::Appearance {
         application::Appearance {
             background_color: color!(0x28, 0x28, 0x28),
-            text_color: color!(0xeb, 0xdb, 0xb2),
+            text_color: color!(0x00, 0xff, 0x00),
+            // text_color: color!(0xeb, 0xdb, 0xb2),
         }
     }
 }
@@ -19,9 +20,7 @@ impl text::StyleSheet for Theme {
     type Style = ();
 
     fn appearance(&self, _style: Self::Style) -> text::Appearance {
-        text::Appearance {
-            color: color!(0xeb, 0xdb, 0xb2).into(),
-        }
+        text::Appearance::default()
     }
 }
 

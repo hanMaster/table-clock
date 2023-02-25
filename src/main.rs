@@ -2,6 +2,7 @@ use chrono::Local;
 use clock::theme::Theme;
 use core::default::Default;
 use iced::widget::{Container, Text};
+use iced::window::Position;
 use iced::{executor, Application, Command, Element, Renderer, Settings, Subscription};
 
 const FONT: &[u8] = include_bytes!("../fonts/Terminus.ttf");
@@ -10,6 +11,7 @@ fn main() -> iced::Result {
         default_font: Some(FONT),
         window: iced::window::Settings {
             size: (980, 256),
+            position: Position::Specific(0, 900),
             visible: true,
             resizable: false,
             decorations: true,
