@@ -1,9 +1,9 @@
 use clock::app::App;
+use clock::config::FONT;
 use core::default::Default;
 use iced::window::Position;
 use iced::{Application, Settings};
 
-const FONT: &[u8] = include_bytes!("../fonts/Terminus.ttf");
 fn main() -> iced::Result {
     App::run(Settings {
         default_font: Some(FONT),

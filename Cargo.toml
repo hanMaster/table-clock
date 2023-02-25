@@ -8,3 +8,5 @@ edition = "2021"
 [dependencies]
 iced = { version = "0.8.0", features = ["tokio"] }
 chrono = "0.4.23"
+confy = "0.5.1"
+serde = { version = "1.0.152", features = ["serde_derive"] }
