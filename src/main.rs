@@ -9,7 +9,7 @@ fn main() -> iced::Result {
         default_font: Some(FONT),
         window: iced::window::Settings {
             size: (980, 256),
-            position: Position::Specific(0, 900),
+            position: Position::Centered,
             visible: true,
             resizable: false,
             decorations: true,
