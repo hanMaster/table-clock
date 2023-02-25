@@ -16,3 +16,6 @@ strip = true  # Automatically strip symbols from the binary.
 opt-level = "z"  # Optimize for size.
 lto = true
 panic = "abort"
+
+[[bin]]
+subsystem = "windows"
