@@ -1,9 +1,8 @@
 use chrono::Local;
+use clock::theme::Theme;
 use core::default::Default;
 use iced::widget::{Container, Text};
-use iced::{
-    executor, Application, Color, Command, Element, Renderer, Settings, Subscription, Theme,
-};
+use iced::{executor, Application, Command, Element, Renderer, Settings, Subscription};
 
 const FONT: &[u8] = include_bytes!("../fonts/Terminus.ttf");
 fn main() -> iced::Result {
@@ -62,14 +61,7 @@ impl Application for App {
     }
 
     fn view(&self) -> Element<'_, Self::Message, Renderer<Self::Theme>> {
-        let label = Text::new(&self.time)
-            .size(240)
-            .style(Color::from_rgb(0., 1., 0.));
-        // let c = container::Appearance {
-        //     text_color: Some(Color::new(0., 1., 0., 1.0)),
-        //     background: Option::from(Background::Color(Color::new(1., 1., 1., 1.0))),
-        //     ..Default::default()
-        // };
+        let label = Text::new(&self.time).size(240);
         Container::new(label).into()
     }
 
