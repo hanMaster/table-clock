@@ -15,7 +15,7 @@ fn main() -> iced::Result {
             size: (width, height),
             position: Position::Default,
             visible: true,
-            resizable: false,
+            resizable: true,
             decorations: true,
             always_on_top: true,
             ..Default::default()

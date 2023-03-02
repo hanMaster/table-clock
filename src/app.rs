@@ -1,13 +1,19 @@
 use crate::config::{Config, APP_NAME};
-use crate::theme::Theme;
+use crate::theme;
+use crate::theme::MyTheme;
 use chrono::Local;
-use iced::widget::{Button, Column, Container, Text};
-use iced::{executor, Alignment, Application, Command, Element, Length, Renderer, Subscription};
+use iced::widget::{row, Button, Column, Container, Row, Text};
+use iced::{
+    color, executor, Alignment, Application, Color, Command, Element, Renderer, Subscription,
+};
+use iced_aw::ColorPicker;
 
 pub struct App {
     time: String,
     page: Pages,
     cfg: Config,
+    show_picker: bool,
+    color: Color,
 }
 
 enum Pages {
@@ -20,12 +26,17 @@ pub enum Message {
     Tick,
     Setup,
     SetupDone,
+    IncreaseFont,
+    DecreaseFont,
+    ChooseColor,
+    SubmitColor(Color),
+    CancelColor,
 }
 
 impl Application for App {
     type Executor = executor::Default;
     type Message = Message;
-    type Theme = Theme;
+    type Theme = MyTheme;
     type Flags = ();
 
     fn new(_flags: Self::Flags) -> (Self, Command<Self::Message>) {
@@ -40,6 +51,8 @@ impl Application for App {
                 time: format!("{}", date_time.format("%H:%M:%S")),
                 page: Pages::Main,
                 cfg: config,
+                show_picker: false,
+                color: Color::new(0., 1., 0., 1.),
             },
             Command::none(),
         )
@@ -59,6 +72,23 @@ impl Application for App {
             }
             Message::SetupDone => {
                 self.page = Pages::Main;
+                confy::store(APP_NAME, None, self.cfg).expect("Failed to save config");
+            }
+            Message::IncreaseFont => {
+                self.cfg.font_size += 4.;
+            }
+            Message::DecreaseFont => {
+                self.cfg.font_size -= 4.;
+            }
+            Message::ChooseColor => {
+                self.show_picker = true;
+            }
+            Message::SubmitColor(color) => {
+                self.color = color;
+                self.show_picker = false;
+            }
+            Message::CancelColor => {
+                self.show_picker = false;
             }
         }
 
@@ -68,8 +98,12 @@ impl Application for App {
     fn view(&self) -> Element<'_, Self::Message, Renderer<Self::Theme>> {
         match self.page {
             Pages::Main => {
-                let setup_button = Button::new(Text::new("Enter Setup")).on_press(Message::Setup);
-                let label = Text::new(&self.time).size(self.cfg.font_size);
+                let setup_button = Button::new(Text::new("*"))
+                    .style(theme::Button::Text)
+                    .on_press(Message::Setup);
+                let label = Text::new(&self.time)
+                    .style(theme::Text::FromConfig)
+                    .size(self.cfg.font_size);
                 let content = Column::new()
                     .align_items(Alignment::Start)
                     .push(setup_button)
@@ -77,14 +111,43 @@ impl Application for App {
                 Container::new(content).into()
             }
             Pages::Setup => {
-                let done_button = Button::new(Text::new("Done"))
-                    .width(Length::Fixed(100.))
+                let done_button = Button::new(Text::new("Сохранить"))
+                    .style(theme::Button::Text)
                     .on_press(Message::SetupDone);
-                let label = Text::new("Setup all settings for display").size(24);
+                let inc_btn = Button::new(Text::new(" + "))
+                    .style(theme::Button::Primary)
+                    .on_press(Message::IncreaseFont);
+                let dec_btn = Button::new(Text::new(" - "))
+                    .style(theme::Button::Primary)
+                    .on_press(Message::DecreaseFont);
+                let label = Text::new(format!("Размер шрифта: {}", self.cfg.font_size)).size(24);
+                let font_row = row![label, inc_btn, dec_btn]
+                    .spacing(10)
+                    .padding(10)
+                    .align_items(Alignment::Center);
+
+                let color_button = Button::new(Text::new("Выбрать цвет текста"))
+                    .style(theme::Button::Primary)
+                    .on_press(Message::ChooseColor);
+
+                let datepicker = ColorPicker::new(
+                    self.show_picker,
+                    color!(self.cfg.text_color),
+                    color_button,
+                    Message::CancelColor,
+                    Message::SubmitColor,
+                );
+                let row = Row::new()
+                    .align_items(Alignment::Center)
+                    .spacing(10)
+                    .padding(10)
+                    .push(Text::new("Образец текста").style(theme::Text::FromConfig))
+                    .push(datepicker);
                 let content = Column::new()
                     .align_items(Alignment::Start)
                     .push(done_button)
-                    .push(label);
+                    .push(font_row)
+                    .push(row);
                 Container::new(content).into()
             }
         }
