@@ -3,9 +3,7 @@ use crate::theme;
 use crate::theme::MyTheme;
 use chrono::Local;
 use iced::widget::{row, Button, Column, Container, Row, Text};
-use iced::{
-    color, executor, Alignment, Application, Color, Command, Element, Renderer, Subscription,
-};
+use iced::{executor, Alignment, Application, Color, Command, Element, Renderer, Subscription};
 use iced_aw::ColorPicker;
 
 pub struct App {
@@ -13,7 +11,6 @@ pub struct App {
     page: Pages,
     cfg: Config,
     show_picker: bool,
-    color: Color,
 }
 
 enum Pages {
@@ -31,6 +28,7 @@ pub enum Message {
     ChooseColor,
     SubmitColor(Color),
     CancelColor,
+    SetDefault,
 }
 
 impl Application for App {
@@ -41,10 +39,9 @@ impl Application for App {
 
     fn new(_flags: Self::Flags) -> (Self, Command<Self::Message>) {
         let config = confy::load(APP_NAME, None).unwrap_or_default();
-        println!("{:#?}", config);
-        let path =
-            confy::get_configuration_file_path(APP_NAME, None).expect("Failed to get config path");
-        println!("Config path: {:#?}", path);
+        // let path =
+        //     confy::get_configuration_file_path(APP_NAME, None).expect("Failed to get config path");
+        // println!("Config path: {:#?}", path);
         let date_time = Local::now();
         (
             Self {
@@ -52,7 +49,6 @@ impl Application for App {
                 page: Pages::Main,
                 cfg: config,
                 show_picker: false,
-                color: Color::new(0., 1., 0., 1.),
             },
             Command::none(),
         )
@@ -84,11 +80,15 @@ impl Application for App {
                 self.show_picker = true;
             }
             Message::SubmitColor(color) => {
-                self.color = color;
+                self.cfg.text_color = color.into_linear();
                 self.show_picker = false;
             }
             Message::CancelColor => {
                 self.show_picker = false;
+            }
+            Message::SetDefault => {
+                self.cfg.text_color = [0., 1., 0., 1.];
+                self.cfg.font_size = 240.;
             }
         }
 
@@ -132,22 +132,31 @@ impl Application for App {
 
                 let datepicker = ColorPicker::new(
                     self.show_picker,
-                    color!(self.cfg.text_color),
+                    Color::from(self.cfg.text_color),
                     color_button,
                     Message::CancelColor,
                     Message::SubmitColor,
                 );
-                let row = Row::new()
+                let color_row = Row::new()
                     .align_items(Alignment::Center)
                     .spacing(10)
                     .padding(10)
                     .push(Text::new("Образец текста").style(theme::Text::FromConfig))
                     .push(datepicker);
+                let default_btn = Button::new(Text::new("Сброс настроек"))
+                    .style(theme::Button::Primary)
+                    .on_press(Message::SetDefault);
+                let default_row = Row::new()
+                    .align_items(Alignment::Center)
+                    .spacing(10)
+                    .padding(10)
+                    .push(default_btn);
                 let content = Column::new()
                     .align_items(Alignment::Start)
                     .push(done_button)
                     .push(font_row)
-                    .push(row);
+                    .push(color_row)
+                    .push(default_row);
                 Container::new(content).into()
             }
         }

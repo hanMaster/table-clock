@@ -1,6 +1,6 @@
 use crate::config::{Config, APP_NAME};
 use iced::widget::{button, container, text};
-use iced::{application, color};
+use iced::{application, color, Color};
 use iced_aw::native::color_picker;
 use iced_aw::native::color_picker::Appearance;
 
@@ -22,7 +22,7 @@ impl application::StyleSheet for MyTheme {
     fn appearance(&self, _style: &Self::Style) -> application::Appearance {
         application::Appearance {
             background_color: color!(0x282828),
-            text_color: color!(self.cfg.text_color),
+            text_color: Color::from(self.cfg.text_color),
         }
     }
 }
@@ -40,7 +40,7 @@ impl text::StyleSheet for MyTheme {
     fn appearance(&self, style: Self::Style) -> text::Appearance {
         match style {
             Text::FromConfig => text::Appearance {
-                color: color!(self.cfg.text_color).into(),
+                color: Some(Color::from(self.cfg.text_color)),
             },
             Text::Setup => text::Appearance {
                 color: color!(0xff, 0xff, 0xff).into(),

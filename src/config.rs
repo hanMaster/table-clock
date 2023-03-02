@@ -3,14 +3,14 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Debug, Copy, Clone)]
 pub struct Config {
     pub font_size: f32,
-    pub text_color: u32,
+    pub text_color: [f32; 4],
 }
 
 impl Default for Config {
     fn default() -> Self {
         Self {
             font_size: 240.,
-            text_color: 0xebdbb2,
+            text_color: [0.9, 0.88, 0.67, 1.],
         }
     }
 }
