@@ -30,10 +30,10 @@ impl Application for App {
 
     fn new(_flags: Self::Flags) -> (Self, Command<Self::Message>) {
         let config = confy::load(APP_NAME, None).unwrap_or_default();
-        // println!("{:#?}", config);
-        // let path =
-        //     confy::get_configuration_file_path(APP_NAME, None).expect("Failed to get config path");
-        // println!("Config path: {:#?}", path);
+        println!("{:#?}", config);
+        let path =
+            confy::get_configuration_file_path(APP_NAME, None).expect("Failed to get config path");
+        println!("Config path: {:#?}", path);
         let date_time = Local::now();
         (
             Self {
@@ -80,7 +80,7 @@ impl Application for App {
                 let done_button = Button::new(Text::new("Done"))
                     .width(Length::Fixed(100.))
                     .on_press(Message::SetupDone);
-                let label = Text::new(&self.time).size(self.cfg.font_size);
+                let label = Text::new("Setup all settings for display").size(24);
                 let content = Column::new()
                     .align_items(Alignment::Start)
                     .push(done_button)
