@@ -87,7 +87,7 @@ impl Application for App {
                 self.show_picker = false;
             }
             Message::SetDefault => {
-                self.cfg.text_color = [0., 1., 0., 1.];
+                self.cfg.text_color = [0.9, 0.88, 0.67, 1.];
                 self.cfg.font_size = 240.;
             }
         }
