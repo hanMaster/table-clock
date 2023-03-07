@@ -7,7 +7,7 @@ use iced::{Application, Settings};
 fn main() -> iced::Result {
     let config: Config = confy::load(APP_NAME, None).unwrap_or_default();
     let font_size = config.font_size;
-    let width = (font_size * 3.4) as u32;
+    let width = (font_size * 3.6) as u32;
     let height = (font_size) as u32;
     App::run(Settings {
         default_font: Some(FONT),
