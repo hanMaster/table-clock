@@ -17,4 +17,4 @@ impl Default for Config {
 
 pub const APP_NAME: &'static str = "table-clock";
 
-pub const FONT: &[u8] = include_bytes!("../fonts/Terminus.ttf");
+pub const FONT: &[u8] = include_bytes!("../fonts/Digi.ttf");

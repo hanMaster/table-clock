@@ -98,20 +98,17 @@ impl Application for App {
     fn view(&self) -> Element<'_, Self::Message, Renderer<Self::Theme>> {
         match self.page {
             Pages::Main => {
-                let setup_button = Button::new(Text::new("*"))
+                let setup_button = Button::new(Text::new("."))
                     .style(theme::Button::Text)
                     .on_press(Message::Setup);
                 let label = Text::new(&self.time)
                     .style(theme::Text::FromConfig)
                     .size(self.cfg.font_size);
-                let content = Column::new()
-                    .align_items(Alignment::Start)
-                    .push(setup_button)
-                    .push(label);
+                let content = row![setup_button, label].align_items(Alignment::End);
                 Container::new(content).into()
             }
             Pages::Setup => {
-                let done_button = Button::new(Text::new("Сохранить"))
+                let done_button = Button::new(Text::new("Save"))
                     .style(theme::Button::Text)
                     .on_press(Message::SetupDone);
                 let inc_btn = Button::new(Text::new(" + "))
@@ -120,13 +117,13 @@ impl Application for App {
                 let dec_btn = Button::new(Text::new(" - "))
                     .style(theme::Button::Primary)
                     .on_press(Message::DecreaseFont);
-                let label = Text::new(format!("Размер шрифта: {}", self.cfg.font_size)).size(24);
+                let label = Text::new(format!("Font size: {}", self.cfg.font_size)).size(24);
                 let font_row = row![label, inc_btn, dec_btn]
                     .spacing(10)
                     .padding(10)
                     .align_items(Alignment::Center);
 
-                let color_button = Button::new(Text::new("Выбрать цвет текста"))
+                let color_button = Button::new(Text::new("Font color"))
                     .style(theme::Button::Primary)
                     .on_press(Message::ChooseColor);
 
@@ -141,9 +138,9 @@ impl Application for App {
                     .align_items(Alignment::Center)
                     .spacing(10)
                     .padding(10)
-                    .push(Text::new("Образец текста").style(theme::Text::FromConfig))
+                    .push(Text::new("Example").style(theme::Text::FromConfig))
                     .push(datepicker);
-                let default_btn = Button::new(Text::new("Сброс настроек"))
+                let default_btn = Button::new(Text::new("Reset settings"))
                     .style(theme::Button::Primary)
                     .on_press(Message::SetDefault);
                 let default_row = Row::new()
